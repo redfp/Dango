@@ -19,7 +19,7 @@ function showTime() {
   var m = d.getMinutes();
   var s = d.getSeconds();
   var M = d.getMonth();
-  var D = d.getDay();
+  var D = d.getDate();
   var Y = d.getFullYear();
 
   var time = (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m);
@@ -44,9 +44,9 @@ function showTime() {
   document.getElementsByClassName("time").item(0).textContent = time;
 
   if (config.month_first) {
-    var date = months[M] + " " + (D + 1).toString();
+    var date = months[M] + " " + D.toString();
   } else {
-    var date = (D + 1).toString() + " " + months[M];
+    var date = D.toString() + " " + months[M];
   }
   if (config.show_year) {
     date += ", " + Y;
