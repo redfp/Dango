@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Dango</title>
+    <link rel=" shortcut icon" type="image/png" href="favicon.png" />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+    <main>
+        <div class="time"></div>
+        <div class="date"></div>
+        <div class="search">
+            <form id="search">
+                <input type="search" class="search_bar" placeholder="Search..." autofocus />
+            </form>
+        </div>
+        <a class="prev" onclick="previousSlide()"><i class="card_icon" data-feather="chevron-up"></i></a>
+        <div class="links">
+            <div class="slides"></div>
+        </div>
+        <a class="next" onclick="nextSlide()"><i class="card_icon" data-feather="chevron-down"></i></a>
+        <div class="title"></div>
+    </main>
+    <script src="links.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

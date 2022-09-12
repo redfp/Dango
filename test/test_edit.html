@@ -1,0 +1,822 @@
+<head>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 3vh;
+            border: 1px solid #888;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        /* Modal Content/Box */
+        .links-edit {
+            margin: 25vh auto;
+            width: 60vh;
+            text-align: center;
+        }
+
+        .link-edit {
+            margin: 32vh auto;
+            width: 40vh;
+        }
+
+        /* The Close Button */
+        .close {
+            color: var(--fg-faint);
+            float: right;
+            width: 3vh;
+            height: 3vh;
+            overflow: hidden;
+            position: absolute;
+            right: 3vh;
+        }
+
+        .close:hover {
+            color: var(--fbg);
+            cursor: pointer;
+        }
+
+        .radio-container {
+            display: inline-block;
+            position: relative;
+            padding-left: 4vh;
+            margin-bottom: 1vh;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            margin-left: 1vh;
+            margin-right: 2vh;
+        }
+
+        .radio {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-button {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3vh;
+            width: 3vh;
+            background-color: var(--bg);
+            border: 2px solid var(--sbg);
+            border-radius: 50%;
+        }
+
+        .radio-container:hover input~.radio-button {
+            border: 2px solid var(--fg);
+        }
+
+        .radio:checked~.radio-button {
+            background-color: var(--accent);
+            border: none;
+            transform: translateY(-0.2rem);
+        }
+
+        .input-title {
+            text-align: center;
+            font-size: 3vh;
+            font-weight: bold;
+            font-family: var(--font-family);
+        }
+
+        .slide-button {
+            color: var(--fg-faint);
+            width: 4vh;
+            height: 4vh;
+            overflow: hidden;
+            position: absolute;
+            cursor: pointer;
+        }
+
+        .slide-button:hover {
+            color: var(--fg);
+        }
+
+        .remove-slide {
+            left: 3vh;
+        }
+
+        .add-slide {
+            right: 3vh;
+        }
+
+        .slides-border {
+            border: 3px solid var(--bg);
+            border-radius: 15px;
+            margin: 3vh;
+            padding: 1vh;
+        }
+
+        .slides-border:hover {
+            border-color: var(--accent);
+        }
+
+
+        .right-buttons {
+            color: var(--sbg);
+            width: 3vh;
+            height: 3vh;
+            margin-bottom: 2vh;
+        }
+
+        .right-buttons:hover {
+            color: var(--fg);
+            cursor: pointer;
+        }
+
+        .right-buttons-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            height: 4vh;
+            padding: 1vh;
+            left: 1.7vh;
+            border: 3px solid var(--fg);
+            border-radius: 15px;
+            background-color: var(--bg);
+            align-items: flex-end;
+            justify-content: space-around;
+            align-content: center;
+            top: 2.5vh;
+            opacity: 0;
+        }
+
+        .right-buttons-container:hover {
+            height: 22vh;
+            opacity: 1;
+        }
+
+        .menu {
+            position: absolute;
+            color: var(--sbg);
+            width: 3vh;
+            height: 3vh;
+            margin-bottom: 2vh;
+            left: 3vh;
+        }
+
+        .button-restore-default {
+            color: var(--warn-faint)
+        }
+
+        .button-restore-default:hover {
+            color: var(--warn)
+        }
+
+        .tooltip {
+            z-index: 2;
+            overflow: hidden;
+            position: absolute;
+            padding: 1vh;
+            border: 3px solid var(--fg);
+            border-radius: 15px;
+            right: 6vh;
+            background-color: var(--bg);
+            visibility: hidden;
+            font-size: 1.8vh;
+            opacity: 0;
+            transition-delay: 0s;
+        }
+
+        .tooltip-save {
+            top: 0;
+        }
+
+        .tooltip-export {
+            top: 5vh;
+        }
+
+        .tooltip-import {
+            top: 10vh;
+        }
+
+        .tooltip-restore-default {
+            top: 15vh;
+        }
+
+        .button-save:hover~.tooltip-save {
+            transition-delay: 1s;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button-import:hover~.tooltip-import {
+            transition-delay: 1s;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button-export:hover~.tooltip-export {
+            transition-delay: 1s;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button-restore-default:hover~.tooltip-restore-default {
+            transition-delay: 1s;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .notification {
+            position: absolute;
+            right: 5vh;
+            bottom: 0vh;
+            z-index: 2;
+            background-color: var(--bg);
+            border: 3px solid transparent;
+            color: var(--fg);
+            padding: 3vh;
+            border-radius: 15px;
+            margin-top: 3vh;
+            margin-left: auto;
+            margin-right: 0;
+            width: fit-content;
+            visibility: hidden;
+            opacity: 0;
+
+        }
+
+        .notification:hover {
+            border: 3px solid var(--fg);
+            cursor: pointer;
+        }
+
+        .notification-opened {
+            visibility: visible;
+            opacity: 1;
+            bottom: 5vh;
+        }
+
+        .notification-warning {
+            background-color: var(--warn-faint);
+        }
+
+        .notification-warning:hover {
+            border: 3px solid var(--warn);
+        }
+
+        .input-hint {
+            text-align: center;
+            display: block;
+            visibility: hidden;
+            opacity: 0;
+            text-decoration: none;
+            color: var(--link);
+        }
+
+        .input-hint:hover {
+            text-decoration: underline;
+        }
+
+        .input-hint-enabled {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div><button onclick="showEditLinks()">Open Modal</button></div>
+
+    <div id="edit-links" class="modal">
+
+        <div class="modal-content links-edit">
+            <i class="close" onclick="hideEditLinks()" data-feather="x"></i>
+            <i class="menu" data-feather="menu"></i>
+            <div class="right-buttons-container">
+                <i class="right-buttons button-save" onclick="saveLinks()" data-feather="save"></i>
+                <i class="right-buttons button-export" onclick="exportLinks()" data-feather="download"></i>
+                <i class="right-buttons button-import" onclick="importLinks()" data-feather="upload"></i>
+                <i class="right-buttons button-restore-default" onclick="removeLinks()" data-feather="trash-2"></i>
+                <span class="tooltip tooltip-save">Save</span>
+                <span class="tooltip tooltip-export">Export Links</span>
+                <span class="tooltip tooltip-import">Import Links</span>
+                <span class="tooltip tooltip-restore-default">Restore Default Links</span>
+            </div>
+
+            <div>
+                <h1>Edit Links</h1>
+                <div class="slides-border">
+                    <a class="prev" onclick="previousSlide()" ondragover="slideControlDragOver(event)"
+                        ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)"><i
+                            class="card_icon" data-feather="chevron-up"></i></a>
+                    <div class="links">
+                        <div class="slides"></div>
+                    </div>
+                    <a class="next" onclick="nextSlide()" ondragover="slideControlDragOver(event)"
+                        ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)"><i
+                            class="card_icon" data-feather="chevron-down"></i></a>
+                </div>
+                <div>
+                    <i class="slide-button remove-slide" onclick="removeSlide()" data-feather="minus"></i>
+                    <input type="text" id="input-title" name="input-title" class="input-title"
+                        onfocusout="updateSlideTitle()">
+                    <i class="slide-button ad-slide" onclick="addSlide()" data-feather="plus"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div id="edit-link" class="modal">
+
+        <div class="modal-content link-edit">
+            <i class="close" onclick="hideEditLink()" data-feather="x"></i>
+
+            <h1 id="edit-link-title">Edit Link #</h1>
+            <br>
+            <div>
+                <div>
+                    <label class="radio-container">
+                        <input type="radio" id="radio-icon" name="text-icon" value="icon" class="radio"
+                            onchange="updatePreview();" checked>
+                        <span class="radio-button"></span>
+                        Icon
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" id="radio-text" name="text-icon" value="text" class="radio"
+                            onchange="updatePreview();">
+                        <span class="radio-button"></span>
+                        Text
+                    </label>
+                </div>
+                <div>
+                    <input type="text" id="input-text" name="input-text" oninput="updatePreview();"
+                        ondrop="editLinkDrop(event)">
+                    <sub><a target="_blank" id="input-hint" class="input-hint input-hint-enabled"
+                            href="https://feathericons.com/">
+                            (Take icons from here)
+                        </a></sub><br>
+                    <label for="input-link">Link:</label>
+                    <input type="url" id="input-link" name="input-link" oninput="updatePreview();"
+                        ondrop="editLinkDrop(event)">
+                    <sub><a id="input-link-hint" class="input-hint" onclick="fixProtocol()">
+                            (Looks like you forgot the protocol)
+                        </a></sub><br>
+                </div>
+
+            </div>
+            <a target="_blank" id="preview-card" class="card" href="https://www.amishrakefight.org/gfy/">Example</a>
+
+        </div>
+
+    </div>
+
+    <div class="notification" id="notification" onclick="hideNotification()"></div>
+    <!-- <div id="notification-container"></div> -->
+    <script src="links.js"></script>
+    <script src="config.js"></script>
+    <script>
+
+        const sample_slide = `{
+    "title": "Untitled",
+    "content": [
+    ]
+  }`
+
+        const edit_links = document.getElementById("edit-links");
+        const edit_link = document.getElementById("edit-link");
+        const edit_link_title = document.getElementById("edit-link-title");
+        const radio_icon = document.getElementById("radio-icon");
+        const radio_text = document.getElementById("radio-text");
+        const input_text = document.getElementById("input-text");
+        const input_link = document.getElementById("input-link");
+        const preview_card = document.getElementById("preview-card");
+        const notification = document.getElementById("notification");
+        const input_title = document.getElementById("input-title");
+        const input_hint = document.getElementById("input-hint");
+        const input_link_hint = document.getElementById("input-link-hint");
+        const storage = window.localStorage;
+        const getCssVariable = (v) => getComputedStyle(document.body).getPropertyValue("--" + v);
+        const maxSlideLength = getCssVariable("slide-rows") * getCssVariable("slide-cols");
+
+        var current_link = {};
+        var current_slide = 0;
+        var can_scroll = true;
+
+        showEditLinks();
+
+
+        if (!config.force_x_button) {
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target.id == "edit-link") {
+                    hideEditLink();
+                } else if (event.target.id == "edit-links") {
+                    hideEditLinks();
+                }
+            }
+        }
+
+        function fixProtocol() {
+            input_link.value = "http://" + input_link.value;
+            updatePreview();
+        }
+
+        function editLinkDrop(event) {
+            event.preventDefault();
+            let text = event.dataTransfer.getData("text");
+            event.target.value = text;
+            updatePreview();
+        }
+
+        function editLinksDrag(event, slides_i, link_i) {
+            event.dataTransfer.setData("text", slides_i + ";" + link_i);
+
+        }
+
+        function editLinksDrop(event, slides_i, link_i) {
+            event.preventDefault();
+            let text = event.dataTransfer.getData("text");
+            if (text.match(/^[0-9]+;[0-9]+$/)) {
+                let ids = text.split(";");
+                if (ids[0] == slides_i || links[slides_i].content.length < maxSlideLength) {
+                    let dragged = links[ids[0]].content.splice(ids[1], 1)[0];
+                    links[slides_i].content.splice(link_i, 0, dragged);
+                } else {
+                    showNotification("Cannot move the link: this slide is full.", true, 3000);
+                    goToSlide(ids[0]);
+                }
+                // let i = slides_i;
+                // if (ids[0] < slides_i) {
+                //     while (i > 0 && links[i].content.length > 6) { //TODO: Hardcoded
+                //         let leftover = links[i].content.splice(0, 1)[0];
+                //         let prevcontent = links[i - 1].content;
+                //         prevcontent.splice(prevcontent.length, 0, leftover);
+                //         i -= 1;
+                //     }
+                // } else if (ids[0] > slides_i) {
+                //     while (i < (links.length - 1) && links[i].content.length > 6) {
+                //         let currentcontent = links[i].content;
+                //         let leftover = currentcontent.splice(currentcontent.length - 1, 1)[0];
+                //         links[i + 1].content.splice(0, 0, leftover);
+                //         i += 1;
+                //     }
+                // }
+                generateLinks();
+
+            }
+
+        }
+
+        function allowEditLinksDrop(event) {
+            event.preventDefault();
+        }
+
+        function slideControlDragOver(event) {
+            console.log("slideControlDragOver")
+        }
+
+        function slideControlDragEnter(event) {
+            console.log("slideControlDragEnter")
+            let which_way = event.target.parentElement.classList[0];
+            if (which_way == "next") {
+                nextSlide();
+            } else if (which_way == "prev") {
+                previousSlide();
+            }
+        }
+
+        function slideControlDragLeave(event) {
+            console.log("slideControlDragLeave")
+        }
+
+        function showEditLink(slides_i, link_i) {
+            current_link = links[slides_i].content[link_i];
+
+            edit_link_title.innerHTML = "Edit Link #" + (slides_i + 1) + ";" + (link_i + 1);
+            if (current_link.icon) {
+                radio_icon.checked = true;
+            } else {
+                radio_text.checked = true;
+            }
+            input_text.value = current_link.value;
+            input_link.value = current_link.link;
+
+
+            edit_link.style.display = "block";
+
+            updatePreview();
+        }
+
+        function updatePreview() {
+            if (radio_icon.checked) {
+                preview_card.innerHTML = `<i class="card_icon" data-feather="${input_text.value}"></i>`;
+                input_hint.classList.add("input-hint-enabled");
+            } else {
+                preview_card.innerHTML = input_text.value;
+                input_hint.classList.remove("input-hint-enabled");
+            }
+            if (input_link.value.match(/\w+:/gi)) {
+                input_link_hint.classList.remove("input-hint-enabled");
+            } else {
+                input_link_hint.classList.add("input-hint-enabled");
+            }
+            preview_card.href = input_link.value;
+            feather.replace();
+        }
+
+        function saveLinks(automatically) {
+            storage.setItem("links", JSON.stringify(links));
+            if (!automatically) {
+                if (config.auto_save) {
+                    showNotification(`Saved!<br><br>Notice: "auto save" is on.<br>You don't need to save manually.`, false, 10000);
+                } else { showNotification("Saved!", false, 3000); }
+            }
+
+        }
+
+        function showNotification(message, is_warning, delay) {
+
+            if (notification.classList.contains("notification-opened")) {
+                hideNotification();
+                Promise.all(
+                    notification.getAnimations().map((animation) => animation.finished),
+                ).then(() => showNotification(message, is_warning, delay));
+            } else {
+                let creation_date = String(new Date().getTime())
+                notification.dataset.creationDate = creation_date;
+                notification.classList.add("notification-opened");
+                if (is_warning) {
+                    notification.classList.add("notification-warning");
+                }
+                notification.innerHTML = message;
+
+                if (!delay) {
+                    delay = 10000;
+                }
+                new Promise(resolve => setTimeout(resolve, delay)).then(() => hideNotification(creation_date));
+            }
+
+        }
+
+        function hideNotification(creation_date) {
+            if (!creation_date || notification.dataset.creationDate == creation_date) {
+                notification.classList = ["notification"];
+                delete notification.dataset.creationDate;
+            }
+        }
+
+        function loadLinks() {
+            let item = storage.getItem("links");
+            if (item) {
+                links = JSON.parse(item);
+                generateLinks();
+            }
+            else {
+                links = default_links;
+                generateLinks();
+            }
+        }
+
+        function removeLinks() {
+            if (confirm("Are you sure? This action can't be undone.")) {
+                storage.clear();
+                loadLinks();
+                window.location.hash = "#restored";
+                window.location.reload();
+            }
+        }
+
+        function exportLinks() {
+            let blob_file = new Blob([JSON.stringify(links)], { type: "text/plain" });
+            let url = window.URL.createObjectURL(blob_file);
+            let a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            a.href = url;
+            a.download = "links.json";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function importLinks() {
+            let file_input = document.createElement('input');
+            file_input.type = 'file';
+            file_input.onchange = uploadFile;
+            file_input.click();
+        }
+
+        function uploadFile(event) {
+            let file_reader = new FileReader();
+            file_reader.onload = loadLinksFromFile;
+            file_reader.readAsText(event.target.files[0], 'UTF-8');
+        }
+
+        function loadLinksFromFile(event) {
+            try {
+                links = JSON.parse(event.target.result);
+                if (links) {
+                    generateLinks();
+                    showNotification("Links were imported successfully!", false, 3000);
+                } else { showNotification("Nothing was imported.", true, 3000); }
+
+            } catch (e) {
+                showNotification(e.message, true, 10000);
+            }
+
+
+        }
+
+        function hideEditLink() {
+            edit_link.style.display = "none";
+            current_link.icon = radio_icon.checked;
+            current_link.value = input_text.value;
+            current_link.link = input_link.value;
+
+            generateLinks();
+        }
+
+        function showEditLinks() {
+            edit_links.style.display = "block";
+            loadLinks();
+            updateSlideButtons();
+        }
+
+        function hideEditLinks() {
+            edit_links.style.display = "none";
+        }
+
+
+        function nextSlide() {
+            current_slide += 1;
+            showSlides();
+        }
+
+        function previousSlide() {
+            current_slide -= 1;
+            showSlides();
+        }
+
+        function updateSlideTitle() {
+            if (input_title.value) {
+                links[current_slide].title = input_title.value;
+            }
+            generateLinks();
+        }
+
+        function updateSlideButtons() {
+            if (links.length <= 1) {
+                document.getElementsByClassName("prev")[0].style.color = "var(--fg-faint)"
+                document.getElementsByClassName("next")[0].style.color = "var(--fg-faint)"
+                document.getElementsByClassName("prev")[0].style.cursor = "default"
+                document.getElementsByClassName("next")[0].style.cursor = "default"
+            }
+            else {
+                document.getElementsByClassName("prev")[0].style.color = "var(--fg)"
+                document.getElementsByClassName("next")[0].style.color = "var(--fg)"
+                document.getElementsByClassName("prev")[0].style.cursor = "pointer"
+                document.getElementsByClassName("next")[0].style.cursor = "pointer"
+            }
+        }
+
+        function removeSlide() {
+            if (confirm("Are you sure? This action can't be undone.")) {
+                if (links.length > 1) {
+                    let c_slide = current_slide;
+                    previousSlide();
+                    links.splice(c_slide, 1);
+                    generateLinks();
+                    if (c_slide == 0) {
+                        Promise.all(
+                            document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
+                        ).then(previousSlide);
+                    }
+                } else {
+                    addSlide()
+                    links.splice(0, 1);
+                    generateLinks();
+                    Promise.all(
+                        document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
+                    ).then(previousSlide);
+                }
+                updateSlideButtons();
+            }
+        }
+
+        function addSlide() {
+            links.splice(current_slide + 1, 0, JSON.parse(sample_slide));
+            generateLinks();
+            updateSlideButtons();
+            nextSlide();
+        }
+
+        function goToSlide(n) {
+            current_slide = n;
+            showSlides();
+        }
+
+        function showSlides() {
+            var slides = document.getElementsByClassName("slide");
+            var links_slides = document.getElementsByClassName("slides")[0];
+            if (current_slide > slides.length - 1) {
+                current_slide = 0;
+            }
+            if (current_slide < 0) {
+                current_slide = slides.length - 1;
+            }
+            input_title.value = links[current_slide].title;
+            links_slides.style.transform = `translateY(calc(-${current_slide} * (var(--slide-cols) * var(--slide-col-height) + var(--slide-gap) * (var(--slide-cols) - 1) + var(--slide-padding) * 2)))`;
+        }
+
+        function changeSlidesByWheel(event) {
+            event.preventDefault();
+            input_title.blur();
+            if (can_scroll) {
+                if (event.deltaY > 0) {
+                    nextSlide();
+                } else {
+                    previousSlide();
+                }
+                can_scroll = false;
+                Promise.all(
+                    document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
+                ).then(() => { can_scroll = true; })
+            }
+        }
+
+        function generateLinks() {
+            if (config.auto_save) {
+                saveLinks(true);
+            }
+            document.getElementsByClassName("slides")[0].innerHTML = "";
+            let slides_i = 0;
+            links.forEach((slide) => {
+                let res_div = document.createElement("div");
+                res_div.classList.add("slide");
+                let res_html = "";
+                let link_i = 0;
+                slide.content.forEach((link) => {
+                    res_html += `
+        <a href="#"
+           onclick="showEditLink(${slides_i}, ${link_i})"
+           class="card"
+           draggable=true
+           ondragstart="editLinksDrag(event, ${slides_i}, ${link_i})"
+           ondrop="editLinksDrop(event, ${slides_i}, ${link_i})"
+           ondragover="allowEditLinksDrop(event)"
+           >`;
+                    if (link.icon) {
+                        res_html += `
+          <i class="card_icon" data-feather="${link.value}"></i>
+        </a>`;
+                    } else {
+                        res_html += `
+          ${link.value}
+        </a>`;
+                    }
+                    link_i += 1;
+                });
+                res_div.innerHTML = res_html;
+                document.getElementsByClassName("slides")[0].append(res_div);
+                slides_i += 1;
+            });
+            feather.replace();
+        }
+
+        function onLoadCheck() {
+            if (window.location.hash == "#restored") {
+                showNotification("Default links were restored.", false, 3000);
+                window.location.hash = "";
+            }
+        }
+
+        onLoadCheck();
+        showSlides();
+        document
+            .getElementsByClassName("slides")[0]
+            .addEventListener("wheel", changeSlidesByWheel);
+    </script>
+</body>
