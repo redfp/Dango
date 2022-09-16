@@ -303,6 +303,20 @@
             visibility: visible;
             opacity: 1;
         }
+
+        .new-link {
+            background-color: transparent;
+            border: 0.5vh solid var(--sbg);
+            font-size: 3vh;
+            color: var(--sbg);
+        }
+
+        .new-link:hover {
+            background-color: transparent;
+            border-color: var(--accent);
+            transform: translateY(-0.2rem);
+            color: var(--fg);
+        }
     </style>
 </head>
 
@@ -653,6 +667,16 @@
             edit_links.style.display = "none";
         }
 
+        function createNewLink(slide_i) {
+            let slide = links[slide_i].content;
+            if (slide.length < maxSlideLength) {
+                slide.push({ link: "https://example.com", icon: true, value: "slash" });
+                showEditLink(slide_i, slide.length - 1);
+            } else {
+                showNotification("Cannot create the link: this slide is full.", true, 3000);
+            }
+        }
+
 
         function nextSlide() {
             current_slide += 1;
@@ -784,16 +808,18 @@
                     link_i += 1;
                 });
 
-                //         if (slide.content.length < maxSlideLength - 1) {
-                //             res_html += `
-                // <a href="#"
-                //    onclick="createNewLink(${slides_i})"
-                //    class="card new-link"
-                //    draggable=false
-                //    >
-                //   <i class="card-icon" data-feather="${link.value}"></i>
-                // </a>`;
-                //         }
+                if (slide.content.length < maxSlideLength) {
+                    res_html += `
+                <a href="#"
+                   onclick="createNewLink(${slides_i})"
+                   class="card new-link"
+                   draggable=false
+                   ondrop="editLinksDrop(event, ${slides_i}, ${slide.content.length - 1})"
+                   ondragover="allowEditLinksDrop(event)"
+                   >
+                  <i class="card-icon" data-feather="plus"></i>
+                </a>`;
+                }
 
                 res_div.innerHTML = res_html;
                 document.getElementsByClassName("slides")[0].append(res_div);
