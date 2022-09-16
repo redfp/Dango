@@ -330,13 +330,13 @@
                 <div class="slides-border">
                     <a class="prev" onclick="previousSlide()" ondragover="slideControlDragOver(event)"
                         ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)"><i
-                            class="card_icon" data-feather="chevron-up"></i></a>
+                            class="card-icon" data-feather="chevron-up"></i></a>
                     <div class="links">
                         <div class="slides"></div>
                     </div>
                     <a class="next" onclick="nextSlide()" ondragover="slideControlDragOver(event)"
                         ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)"><i
-                            class="card_icon" data-feather="chevron-down"></i></a>
+                            class="card-icon" data-feather="chevron-down"></i></a>
                 </div>
                 <div>
                     <i class="slide-button remove-slide" onclick="removeSlide()" data-feather="minus"></i>
@@ -469,22 +469,6 @@
                     showNotification("Cannot move the link: this slide is full.", true, 3000);
                     goToSlide(ids[0]);
                 }
-                // let i = slides_i;
-                // if (ids[0] < slides_i) {
-                //     while (i > 0 && links[i].content.length > 6) { //TODO: Hardcoded
-                //         let leftover = links[i].content.splice(0, 1)[0];
-                //         let prevcontent = links[i - 1].content;
-                //         prevcontent.splice(prevcontent.length, 0, leftover);
-                //         i -= 1;
-                //     }
-                // } else if (ids[0] > slides_i) {
-                //     while (i < (links.length - 1) && links[i].content.length > 6) {
-                //         let currentcontent = links[i].content;
-                //         let leftover = currentcontent.splice(currentcontent.length - 1, 1)[0];
-                //         links[i + 1].content.splice(0, 0, leftover);
-                //         i += 1;
-                //     }
-                // }
                 generateLinks();
 
             }
@@ -533,7 +517,7 @@
 
         function updatePreview() {
             if (radio_icon.checked) {
-                preview_card.innerHTML = `<i class="card_icon" data-feather="${input_text.value}"></i>`;
+                preview_card.innerHTML = `<i class="card-icon" data-feather="${input_text.value}"></i>`;
                 input_hint.classList.add("input-hint-enabled");
             } else {
                 preview_card.innerHTML = input_text.value;
@@ -790,7 +774,7 @@
            >`;
                     if (link.icon) {
                         res_html += `
-          <i class="card_icon" data-feather="${link.value}"></i>
+          <i class="card-icon" data-feather="${link.value}"></i>
         </a>`;
                     } else {
                         res_html += `
@@ -799,6 +783,18 @@
                     }
                     link_i += 1;
                 });
+
+                //         if (slide.content.length < maxSlideLength - 1) {
+                //             res_html += `
+                // <a href="#"
+                //    onclick="createNewLink(${slides_i})"
+                //    class="card new-link"
+                //    draggable=false
+                //    >
+                //   <i class="card-icon" data-feather="${link.value}"></i>
+                // </a>`;
+                //         }
+
                 res_div.innerHTML = res_html;
                 document.getElementsByClassName("slides")[0].append(res_div);
                 slides_i += 1;

@@ -11,7 +11,7 @@
   --accent: #8ee0e0;
   --link: #2B5DF5;
   --font-family: "Comfortaa";
-  --max_slides: 10;
+  --max-slides: 10;
   --slide-rows: 3;
   --slide-row-width: 12vh;
   --slide-cols: 2;
@@ -97,7 +97,7 @@ sub {
 
 .slides {
   width: min-content;
-  height: calc(var(--max_slides) * (var(--slide-cols) * var(--slide-col-height) + var(--slide-gap) * (var(--slide-cols) - 1) + var(--slide-padding) * 2));
+  height: calc(var(--max-slides) * (var(--slide-cols) * var(--slide-col-height) + var(--slide-gap) * (var(--slide-cols) - 1) + var(--slide-padding) * 2));
   transition: 0.3s ease-in-out;
 }
 
@@ -109,7 +109,7 @@ sub {
   padding: var(--slide-padding);
 }
 
-.card_icon {
+.card-icon {
   width: 3vh;
   height: 3vh;
   /* color: var(--fg); */
@@ -139,7 +139,7 @@ input {
   font-size: 2vh;
 }
 
-.search_bar {
+.search-bar {
   width: 40vh;
   font-size: 2.5vh;
 

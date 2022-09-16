@@ -117,7 +117,7 @@ function generateLinks() {
         <a ${config.open_links_in_new_tab ? 'target="_blank" ' : ""}href="${
           link.link
         }" class="card">
-          <i class="card_icon" data-feather="${link.value}"></i>
+          <i class="card-icon" data-feather="${link.value}"></i>
         </a>`;
       } else {
         res_html += `

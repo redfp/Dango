@@ -39,11 +39,11 @@ const default_links = [
         icon: true,
         value: "layers",
       },
-      // {
-      //   link: "https://en.wikipedia.org/wiki/Main_Page",
-      //   icon: false,
-      //   value: "W",
-      // },
+      {
+        link: "https://en.wikipedia.org/wiki/Main_Page",
+        icon: false,
+        value: "W",
+      },
     ],
   },
   {
