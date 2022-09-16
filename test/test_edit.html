@@ -711,7 +711,7 @@
         }
 
         function removeSlide() {
-            if (confirm("Are you sure? This action can't be undone.")) {
+            if (links[current_slide].content.length == 0 || confirm("Are you sure? This action can't be undone.")) {
                 if (links.length > 1) {
                     let c_slide = current_slide;
                     previousSlide();
