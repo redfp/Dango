@@ -115,6 +115,7 @@
             overflow: hidden;
             position: absolute;
             cursor: pointer;
+            bottom: 6vh;
         }
 
         .slide-button:hover {
@@ -314,8 +315,13 @@
         .new-link:hover {
             background-color: transparent;
             border-color: var(--accent);
-            transform: translateY(-0.2rem);
+            transform: none;
             color: var(--fg);
+        }
+
+        .dragging {
+            /* transition-duration: 0.001s; */
+            transform: translateX(-9999px) !important;
         }
     </style>
 </head>
@@ -356,7 +362,7 @@
                     <i class="slide-button remove-slide" onclick="removeSlide()" data-feather="minus"></i>
                     <input type="text" id="input-title" name="input-title" class="input-title"
                         onfocusout="updateSlideTitle()">
-                    <i class="slide-button ad-slide" onclick="addSlide()" data-feather="plus"></i>
+                    <i class="slide-button add-slide" onclick="addSlide()" data-feather="plus"></i>
                 </div>
 
             </div>
@@ -468,7 +474,13 @@
 
         function editLinksDrag(event, slides_i, link_i) {
             event.dataTransfer.setData("text", slides_i + ";" + link_i);
+            event.dataTransfer.effectAllowed = "move";
+            event.target.classList.add("dragging");
 
+        }
+
+        function editLinksEndDrag(event) {
+            event.target.classList.remove("dragging");
         }
 
         function editLinksDrop(event, slides_i, link_i) {
@@ -793,6 +805,7 @@
            class="card"
            draggable=true
            ondragstart="editLinksDrag(event, ${slides_i}, ${link_i})"
+           ondragend="editLinksEndDrag(event)"
            ondrop="editLinksDrop(event, ${slides_i}, ${link_i})"
            ondragover="allowEditLinksDrop(event)"
            >`;

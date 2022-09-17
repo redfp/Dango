@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa&display=swap");
 
+@font-face {
+  font-family: Monofur;
+  src: url("monofur\ Nerd\ Font\ Complete.ttf");
+}
+
 :root {
   --bg: #ffffff;
   --fg: #000000;
@@ -10,7 +15,8 @@
   --warn-faint: #E08E8E;
   --accent: #8ee0e0;
   --link: #2B5DF5;
-  --font-family: "Comfortaa";
+  --font-family: Comfortaa;
+  --card-font-family: Monofur;
   --max-slides: 10;
   --slide-rows: 3;
   --slide-row-width: 12vh;
@@ -73,6 +79,7 @@ sub {
   width: 100%;
   padding: 1vw;
   text-decoration: none;
+  font-family: var(--card-font-family);
   font-size: 3vh;
   color: var(--fg);
 }
