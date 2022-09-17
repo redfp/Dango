@@ -16,33 +16,27 @@ const default_links = [
     content: [
       {
         link: "https://github.com/",
-        icon: true,
-        value: "github",
+        value: "",
       },
       {
         link: "https://gitlab.com/",
-        icon: true,
-        value: "gitlab",
+        value: "",
       },
       {
         link: "https://trello.com/",
-        icon: true,
-        value: "trello",
+        value: "",
       },
       {
         link: "https://drive.google.com/drive/u/0/my-drive",
-        icon: true,
-        value: "hard-drive",
+        value: "",
       },
       {
         link: "https://stackoverflow.com/",
-        icon: true,
-        value: "layers",
+        value: "",
       },
       {
         link: "https://en.wikipedia.org/wiki/Main_Page",
-        icon: false,
-        value: "W",
+        value: "",
       },
     ],
   },
@@ -51,33 +45,27 @@ const default_links = [
     content: [
       {
         link: "https://www.youtube.com/",
-        icon: true,
-        value: "youtube",
+        value: "",
       },
       {
         link: "https://www.reddit.com/",
-        icon: true,
-        value: "home",
+        value: "",
       },
       {
         link: "https://music.youtube.com/",
-        icon: true,
-        value: "play-circle",
+        value: "",
       },
       {
         link: "https://www.netflix.com/browse",
-        icon: false,
-        value: "N",
+        value: "ﱄ",
       },
       {
         link: "https://www.twitch.tv/",
-        icon: true,
-        value: "twitch",
+        value: "",
       },
       {
         link: "https://open.spotify.com",
-        icon: false,
-        value: "S",
+        value: "",
       },
     ],
   },

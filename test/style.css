@@ -142,7 +142,7 @@ input {
   background-color: var(--bg);
   color: var(--fg);
   border-bottom: 2px solid var(--sbg);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: var(--card-font-family);
   font-size: 2vh;
 }
 

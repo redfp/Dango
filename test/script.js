@@ -112,21 +112,12 @@ function generateLinks() {
     res_div.classList.add("slide");
     let res_html = "";
     slide.content.forEach((link) => {
-      if (link.icon) {
-        res_html += `
-        <a ${config.open_links_in_new_tab ? 'target="_blank" ' : ""}href="${
-          link.link
-        }" class="card">
-          <i class="card-icon" data-feather="${link.value}"></i>
-        </a>`;
-      } else {
         res_html += `
         <a ${config.open_links_in_new_tab ? 'target="_blank" ' : ""}href="${
           link.link
         }" class="card">
           ${link.value}
         </a>`;
-      }
     });
     res_div.innerHTML = res_html;
     document.getElementsByClassName("slides")[0].append(res_div);

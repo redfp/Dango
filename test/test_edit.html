@@ -379,24 +379,10 @@
             <br>
             <div>
                 <div>
-                    <label class="radio-container">
-                        <input type="radio" id="radio-icon" name="text-icon" value="icon" class="radio"
-                            onchange="updatePreview();" checked>
-                        <span class="radio-button"></span>
-                        Icon
-                    </label>
-                    <label class="radio-container">
-                        <input type="radio" id="radio-text" name="text-icon" value="text" class="radio"
-                            onchange="updatePreview();">
-                        <span class="radio-button"></span>
-                        Text
-                    </label>
-                </div>
-                <div>
                     <input type="text" id="input-text" name="input-text" oninput="updatePreview();"
                         ondrop="editLinkDrop(event)">
                     <sub><a target="_blank" id="input-hint" class="input-hint input-hint-enabled"
-                            href="https://feathericons.com/">
+                            href="https://www.nerdfonts.com/cheat-sheet">
                             (Take icons from here)
                         </a></sub><br>
                     <label for="input-link">Link:</label>
@@ -429,8 +415,6 @@
         const edit_links = document.getElementById("edit-links");
         const edit_link = document.getElementById("edit-link");
         const edit_link_title = document.getElementById("edit-link-title");
-        const radio_icon = document.getElementById("radio-icon");
-        const radio_text = document.getElementById("radio-text");
         const input_text = document.getElementById("input-text");
         const input_link = document.getElementById("input-link");
         const preview_card = document.getElementById("preview-card");
@@ -527,11 +511,6 @@
             current_link = links[slides_i].content[link_i];
 
             edit_link_title.innerHTML = "Edit Link #" + (slides_i + 1) + ";" + (link_i + 1);
-            if (current_link.icon) {
-                radio_icon.checked = true;
-            } else {
-                radio_text.checked = true;
-            }
             input_text.value = current_link.value;
             input_link.value = current_link.link;
 
@@ -542,13 +521,8 @@
         }
 
         function updatePreview() {
-            if (radio_icon.checked) {
-                preview_card.innerHTML = `<i class="card-icon" data-feather="${input_text.value}"></i>`;
-                input_hint.classList.add("input-hint-enabled");
-            } else {
-                preview_card.innerHTML = input_text.value;
-                input_hint.classList.remove("input-hint-enabled");
-            }
+            preview_card.innerHTML = input_text.value;
+            input_hint.classList.remove("input-hint-enabled");
             if (input_link.value.match(/\w+:/gi)) {
                 input_link_hint.classList.remove("input-hint-enabled");
             } else {
@@ -662,7 +636,6 @@
 
         function hideEditLink() {
             edit_link.style.display = "none";
-            current_link.icon = radio_icon.checked;
             current_link.value = input_text.value;
             current_link.link = input_link.value;
 
@@ -682,7 +655,7 @@
         function createNewLink(slide_i) {
             let slide = links[slide_i].content;
             if (slide.length < maxSlideLength) {
-                slide.push({ link: "https://example.com", icon: true, value: "slash" });
+                slide.push({ link: "https://example.com", value: "" });
                 showEditLink(slide_i, slide.length - 1);
             } else {
                 showNotification("Cannot create the link: this slide is full.", true, 3000);
@@ -808,16 +781,9 @@
            ondragend="editLinksEndDrag(event)"
            ondrop="editLinksDrop(event, ${slides_i}, ${link_i})"
            ondragover="allowEditLinksDrop(event)"
-           >`;
-                    if (link.icon) {
-                        res_html += `
-          <i class="card-icon" data-feather="${link.value}"></i>
-        </a>`;
-                    } else {
-                        res_html += `
+           >
           ${link.value}
         </a>`;
-                    }
                     link_i += 1;
                 });
 
@@ -830,7 +796,7 @@
                    ondrop="editLinksDrop(event, ${slides_i}, ${slide.content.length - 1})"
                    ondragover="allowEditLinksDrop(event)"
                    >
-                  <i class="card-icon" data-feather="plus"></i>
+                   樂
                 </a>`;
                 }
 
