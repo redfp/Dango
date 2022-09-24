@@ -430,6 +430,9 @@
         var current_slide = 0;
         var can_scroll = true;
 
+        var currently_dragging_slide_i = -1;
+        var currently_dragging_link_i = -1;
+
         showEditLinks();
 
 
@@ -444,6 +447,51 @@
             }
         }
 
+        function parseId(id_string) {
+            match = id_string.match(/^link([0-9]+)-([0-9]+)$/);
+            if (match) {
+                return [match[1], match[2]];
+            }
+        }
+
+        function moveCardBack(src_slide, src_link) {
+            let link = document.getElementById(`link${src_slide}-${src_link}`);
+            if (src_link == 0) {
+                return;
+            }
+
+            if ((src_link % getCssVariable("slide-rows")) == 0) {
+                link.style.transform = "translate(calc((var(--slide-rows) - 1) * var(--slide-gap) + (var(--slide-rows) - 1) * var(--slide-row-width)), calc((var(--slide-gap) + var(--slide-col-height)) * -1))"
+            } else {
+                link.style.transform = "translateX(calc((var(--slide-gap) + var(--slide-row-width)) * -1)"
+            }
+        }
+
+        function moveCardForward(src_slide, src_link) {
+            let link = document.getElementById(`link${src_slide}-${src_link}`);
+            if (src_link == (maxSlideLength - 1)) {
+                return;
+            }
+
+            let slide_rows = getCssVariable("slide-rows")
+
+            if ((src_link % slide_rows) == slide_rows - 1) {
+                link.style.transform = "translate(calc(((var(--slide-rows) - 1) * var(--slide-gap) + (var(--slide-rows) - 1) * var(--slide-row-width)) * -1), calc(var(--slide-gap) + var(--slide-col-height)))"
+            } else {
+                link.style.transform = "translateX(calc(var(--slide-gap) + var(--slide-row-width))"
+            }
+        }
+
+        function clearAllCardTransforms() {
+            Array.from(document.getElementsByClassName("card")).forEach((card) => {
+                card.style.transitionDuration = "0s";
+                card.style.transform = "";
+                Promise.all(
+                    card.getAnimations().map((animation) => animation.finished),
+                ).then(() => card.style.transitionDuration = "")
+            })
+        }
+
         function fixProtocol() {
             input_link.value = "http://" + input_link.value;
             updatePreview();
@@ -456,15 +504,20 @@
             updatePreview();
         }
 
-        function editLinksDrag(event, slides_i, link_i) {
+        function editLinksDragStart(event, slides_i, link_i) {
+            currently_dragging_slide_i = slides_i;
+            currently_dragging_link_i = link_i;
             event.dataTransfer.setData("text", slides_i + ";" + link_i);
-            event.dataTransfer.effectAllowed = "move";
             event.target.classList.add("dragging");
 
         }
 
-        function editLinksEndDrag(event) {
+        function editLinksDragEnd(event) {
+            event.target.style.transitionDuration = "0s";
             event.target.classList.remove("dragging");
+            Promise.all(
+                event.target.getAnimations().map((animation) => animation.finished),
+            ).then(() => event.target.style.transitionDuration = "")
         }
 
         function editLinksDrop(event, slides_i, link_i) {
@@ -489,17 +542,41 @@
             event.preventDefault();
         }
 
+        function editLinksDragEnter(event) {
+            event.preventDefault();
+            ids = parseId(event.target.id);
+            let is_left = false;
+            if (ids[0] != currently_dragging_slide_i && links[ids[0]].content.length >= maxSlideLength)
+                return;
+            if (ids[0] != currently_dragging_slide_i) {
+                is_left = ids[0] > currently_dragging_slide_i;
+            } else {
+                is_left = ids[1] > currently_dragging_link_i;
+            }
+            event.target.style.transform = `translate(calc(${is_left ? -1 : 1} * var(--slide-gap) / 2))`;
+        }
+
+        function editLinksDragLeave(event) {
+            event.preventDefault();
+            event.target.style.transform = ""
+        }
+
         function slideControlDragOver(event) {
             console.log("slideControlDragOver")
         }
 
         function slideControlDragEnter(event) {
-            console.log("slideControlDragEnter")
-            let which_way = event.target.parentElement.classList[0];
-            if (which_way == "next") {
-                nextSlide();
-            } else if (which_way == "prev") {
-                previousSlide();
+            if (can_scroll) {
+                let which_way = event.target.parentElement.classList[0];
+                if (which_way == "next") {
+                    nextSlide();
+                } else if (which_way == "prev") {
+                    previousSlide();
+                }
+                can_scroll = false;
+                Promise.all(
+                    document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
+                ).then(() => { can_scroll = true; })
             }
         }
 
@@ -522,14 +599,12 @@
 
         function updatePreview() {
             preview_card.innerHTML = input_text.value;
-            input_hint.classList.remove("input-hint-enabled");
             if (input_link.value.match(/\w+:/gi)) {
                 input_link_hint.classList.remove("input-hint-enabled");
             } else {
                 input_link_hint.classList.add("input-hint-enabled");
             }
             preview_card.href = input_link.value;
-            feather.replace();
         }
 
         function saveLinks(automatically) {
@@ -773,14 +848,17 @@
                 let link_i = 0;
                 slide.content.forEach((link) => {
                     res_html += `
-        <a href="#"
+        <a id="link${slides_i}-${link_i}"
+           href="#"
            onclick="showEditLink(${slides_i}, ${link_i})"
            class="card"
            draggable=true
-           ondragstart="editLinksDrag(event, ${slides_i}, ${link_i})"
-           ondragend="editLinksEndDrag(event)"
+           ondragstart="editLinksDragStart(event, ${slides_i}, ${link_i})"
+           ondragend="editLinksDragEnd(event)"
            ondrop="editLinksDrop(event, ${slides_i}, ${link_i})"
            ondragover="allowEditLinksDrop(event)"
+           ondragenter="editLinksDragEnter(event)"
+           ondragleave="editLinksDragLeave(event)"
            >
           ${link.value}
         </a>`;
@@ -804,7 +882,6 @@
                 document.getElementsByClassName("slides")[0].append(res_div);
                 slides_i += 1;
             });
-            feather.replace();
         }
 
         function onLoadCheck() {
@@ -813,6 +890,8 @@
                 window.location.hash = "";
             }
         }
+
+        feather.replace();
 
         onLoadCheck();
         showSlides();
