@@ -545,30 +545,24 @@
         }
 
         function animateInsertingLink(src_slide, src_link, dest_slide, dest_link) {
-            let all_animations = []
             if (src_slide == dest_slide) {
                 if (src_link < dest_link) {
                     for (i = src_link + 1; i <= dest_link; i++) {
                         moveCardBack(src_slide, i);
-                        all_animations.push(...getLinkOnSlide(src_slide, i).getAnimations().map(
-                            (animation) => animation.finished));
                     }
                 }
                 else {
                     for (i = dest_link; i < src_link; i++) {
                         moveCardForward(src_slide, i);
-                        all_animations.push(...getLinkOnSlide(src_slide, i).getAnimations().map(
-                            (animation) => animation.finished));
                     }
                 }
-                let source = getLinkOnSlide(src_slide, src_link);
-                source.style.transitionDuration = "0s";
+                getLinkOnSlide(src_slide, src_link).style.transitionDuration = "0s";
                 moveCardToPosition(src_slide, src_link, dest_slide, dest_link);
-                all_animations.push(...source.getAnimations().map(
-                    (animation) => animation.finished));
+                // } else if (links[slides_i].content.length < maxSlideLength - 1) {
 
             }
-            Promise.all(all_animations).then(() => generateLinks());
+            Promise.all(getLinkOnSlide(dest_slide, dest_link).getAnimations().map(
+                (animation) => animation.finished)).then(() => generateLinks());
         }
 
         function allowEditLinksDrop(event) {
@@ -581,9 +575,7 @@
             let is_left = false;
             if (ids[0] != currently_dragging_slide_i && links[ids[0]].content.length >= maxSlideLength)
                 return;
-            if (ids[0] != currently_dragging_slide_i) {
-                is_left = ids[0] > currently_dragging_slide_i;
-            } else {
+            if (ids[0] == currently_dragging_slide_i) {
                 is_left = ids[1] > currently_dragging_link_i;
             }
             event.target.style.transform = `translate(calc(${is_left ? -1 : 1} * var(--slide-gap) / 2))`;
