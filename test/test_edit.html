@@ -141,7 +141,6 @@
             border-color: var(--accent);
         }
 
-
         .right-buttons {
             color: var(--sbg);
             width: 3vh;
@@ -170,6 +169,7 @@
             align-content: center;
             top: 2.5vh;
             opacity: 0;
+            overflow: hidden;
         }
 
         .right-buttons-container:hover {
@@ -396,7 +396,6 @@
     </div>
 
     <div class="notification" id="notification" onclick="hideNotification()"></div>
-    <!-- <div id="notification-container"></div> -->
     <script src="links.js"></script>
     <script src="config.js"></script>
     <script>
@@ -478,7 +477,6 @@
                 calc(${delta_x} * (var(--slide-row-width) + var(--slide-gap))),
                 calc(${delta_y + delta_slide} * (var(--slide-col-height) + var(--slide-gap))
                    + ${dest_slide - src_slide} * var(--slide-gap)))`;
-
         }
 
         function clearAllCardTransforms() {
@@ -509,7 +507,6 @@
             currently_dragging_link_i = ids[1];
             event.dataTransfer.setData("text", ids[0] + ";" + ids[1]);
             event.target.classList.add("dragging");
-
         }
 
         function editLinksDragEnd(event) {
@@ -667,9 +664,7 @@
             input_text.value = current_link.value;
             input_link.value = current_link.link;
 
-
             edit_link.style.display = "block";
-
             updatePreview();
         }
 
@@ -690,11 +685,9 @@
                     showNotification(`Saved!<br><br>Notice: "auto save" is on.<br>You don't need to save manually.`, false, 10000);
                 } else { showNotification("Saved!", false, 3000); }
             }
-
         }
 
         function showNotification(message, is_warning, delay) {
-
             if (notification.classList.contains("notification-opened")) {
                 hideNotification();
                 Promise.all(
@@ -714,7 +707,6 @@
                 }
                 new Promise(resolve => setTimeout(resolve, delay)).then(() => hideNotification(creation_date));
             }
-
         }
 
         function hideNotification(creation_date) {
@@ -776,20 +768,18 @@
                 if (links) {
                     generateLinks();
                     showNotification("Links were imported successfully!", false, 3000);
-                } else { showNotification("Nothing was imported.", true, 3000); }
-
+                } else {
+                    showNotification("Nothing was imported.", true, 3000);
+                }
             } catch (e) {
                 showNotification(e.message, true, 10000);
             }
-
-
         }
 
         function hideEditLink() {
             edit_link.style.display = "none";
             current_link.value = input_text.value;
             current_link.link = input_link.value;
-
             generateLinks();
         }
 
