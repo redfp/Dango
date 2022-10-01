@@ -1,6 +1,5 @@
 <head>
     <link rel="stylesheet" href="style.css" />
-    <script src="https://unpkg.com/feather-icons"></script>
     <style>
         .modal {
             display: none;
@@ -38,6 +37,11 @@
         .link-edit {
             margin: 32vh auto;
             width: 40vh;
+        }
+
+        .icon {
+            font-size: 3vh;
+            font-family: Monofur;
         }
 
         .close {
@@ -111,6 +115,7 @@
             position: absolute;
             cursor: pointer;
             bottom: 6vh;
+            font-size: 4vh;
         }
 
         .slide-button:hover {
@@ -327,13 +332,13 @@
         <div class="modal-background" ondragover="allowModalDrop(event)" ondragenter="modalDragEnter(event)"
             ondragleave="modalDragLeave(event)" ondrop="modalDrop(event)"></div>
         <div class="modal-content links-edit">
-            <i class="close" onclick="hideEditLinks()" data-feather="x"></i>
-            <i class="menu" data-feather="menu"></i>
+            <div class="icon close" onclick="hideEditLinks()">✕</div>
+            <div class="icon menu"></div>
             <div class="right-buttons-container">
-                <i class="right-buttons button-save" onclick="saveLinks()" data-feather="save"></i>
-                <i class="right-buttons button-export" onclick="exportLinks()" data-feather="download"></i>
-                <i class="right-buttons button-import" onclick="importLinks()" data-feather="upload"></i>
-                <i class="right-buttons button-restore-default" onclick="removeLinks()" data-feather="trash-2"></i>
+                <div class="icon right-buttons button-save" onclick="saveLinks()"></div>
+                <div class="icon right-buttons button-export" onclick="exportLinks()"></div>
+                <div class="icon right-buttons button-import" onclick="importLinks()"></div>
+                <div class="icon right-buttons button-restore-default" onclick="removeLinks()"></div>
                 <span class="tooltip tooltip-save">Save</span>
                 <span class="tooltip tooltip-export">Export Links</span>
                 <span class="tooltip tooltip-import">Import Links</span>
@@ -344,20 +349,22 @@
                 <h1>Edit Links</h1>
                 <div class="slides-border">
                     <a class="prev" onclick="previousSlide()" ondragover="slideControlDragOver(event)"
-                        ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)"><i
-                            class="card-icon" data-feather="chevron-up"></i></a>
+                        ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)">
+                        <div class="icon"></div>
+                    </a>
                     <div class="links">
                         <div class="slides"></div>
                     </div>
                     <a class="next" onclick="nextSlide()" ondragover="slideControlDragOver(event)"
-                        ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)"><i
-                            class="card-icon" data-feather="chevron-down"></i></a>
+                        ondragenter="slideControlDragEnter(event)" ondragleave="slideControlDragLeave(event)">
+                        <div class="icon"></div>
+                    </a>
                 </div>
                 <div>
-                    <i class="slide-button remove-slide" onclick="removeSlide()" data-feather="minus"></i>
+                    <div class="icon slide-button remove-slide" onclick="removeSlide()"></div>
                     <input type="text" id="input-title" name="input-title" class="input-title"
                         onfocusout="updateSlideTitle()">
-                    <i class="slide-button add-slide" onclick="addSlide()" data-feather="plus"></i>
+                    <div class="icon slide-button add-slide" onclick="addSlide()">樂</div>
                 </div>
             </div>
         </div>
@@ -365,7 +372,7 @@
     <div id="edit-link" class="modal">
         <div class="modal-background"></div>
         <div class="modal-content link-edit">
-            <i class="close" onclick="hideEditLink()" data-feather="x"></i>
+            <div class="icon close" onclick="hideEditLink()">✕</div>
             <h1 id="edit-link-title">Edit Link #</h1>
             <br>
             <div>
@@ -962,8 +969,6 @@
                 window.location.hash = "";
             }
         }
-
-        feather.replace();
 
         onLoadCheck();
         showSlides();
