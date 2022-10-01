@@ -557,10 +557,12 @@
                     }
                 }
                 getLinkOnSlide(src_slide, src_link).style.transitionDuration = "0s";
-                moveCardToPosition(src_slide, src_link, dest_slide, dest_link);
-                // } else if (links[slides_i].content.length < maxSlideLength - 1) {
-
+            } else {
+                for (i = dest_link; i < links[dest_slide].content.length; i++) {
+                    moveCardForward(dest_slide, i)
+                }
             }
+            moveCardToPosition(src_slide, src_link, dest_slide, dest_link);
             Promise.all(getLinkOnSlide(dest_slide, dest_link).getAnimations().map(
                 (animation) => animation.finished)).then(() => generateLinks());
         }
@@ -581,9 +583,19 @@
             event.target.style.transform = `translate(calc(${is_left ? -1 : 1} * var(--slide-gap) / 2))`;
         }
 
+        function newLinkDragEnter(event) {
+            event.preventDefault();
+            event.target.style.opacity = "30%";
+        }
+
         function editLinksDragLeave(event) {
             event.preventDefault();
             event.target.style.transform = ""
+        }
+
+        function newLinkDragLeave(event) {
+            event.preventDefault();
+            event.target.style.opacity = "";
         }
 
         function slideControlDragOver(event) {
@@ -898,6 +910,8 @@
                    class="card new-link"
                    draggable=false
                    ondrop="editLinksDrop(event)"
+                   ondragenter="newLinkDragEnter(event)"
+                   ondragleave="newLinkDragLeave(event)"
                    ondragover="allowEditLinksDrop(event)"
                    >
                    樂
