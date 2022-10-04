@@ -322,6 +322,64 @@
         .dragging {
             transform: translateX(-9999px) !important;
         }
+
+        .confirm-dialog {
+            z-index: 10;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: var(--fg);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #confirm-text {
+            text-align: center;
+            color: var(--bg);
+            font-size: 7vh;
+            width: 50%;
+        }
+
+        .confirm-choice {
+            margin-top: 5vh;
+        }
+
+        #confirm-positive {
+            text-align: center;
+            color: var(--bg);
+            font-size: 5vh;
+            margin-left: 5vh;
+            margin-right: 5vh;
+            text-decoration: none;
+        }
+
+        #confirm-positive:hover {
+            color: var(--accent);
+        }
+
+        #confirm-negative {
+            text-align: center;
+            color: var(--warn-faint);
+            font-size: 5vh;
+            margin-left: 5vh;
+            margin-right: 5vh;
+            text-decoration: none;
+        }
+
+        #confirm-negative:hover {
+            color: var(--warn);
+        }
+
+        .confirm-opening {
+            display: flex;
+            opacity: 0;
+        }
+
+        .confirm-opened {
+            opacity: 80%;
+        }
     </style>
 </head>
 
@@ -396,6 +454,13 @@
     </div>
 
     <div class="notification" id="notification" onclick="hideNotification()"></div>
+    <div id="confirm-dialog" class="confirm-dialog">
+        <h1 id="confirm-text">Are you sure?</h1>
+        <div class="confirm-choice">
+            <a href="#" id="confirm-negative">No</a>
+            <a href="#" id="confirm-positive">Yes</a>
+        </div>
+    </div>
     <script src="links.js"></script>
     <script src="config.js"></script>
     <script>
@@ -419,6 +484,10 @@
         const storage = window.localStorage;
         const getCssVariable = (v) => getComputedStyle(document.body).getPropertyValue("--" + v);
         const maxSlideLength = getCssVariable("slide-rows") * getCssVariable("slide-cols");
+        const confirm_dialog = document.getElementById("confirm-dialog");
+        const confirm_text = document.getElementById("confirm-text");
+        const confirm_positive = document.getElementById("confirm-positive");
+        const confirm_negative = document.getElementById("confirm-negative");
 
         var current_link = {};
         var current_slide = 0;
@@ -582,10 +651,10 @@
             let text = event.dataTransfer.getData("text");
             if (text.match(/^[0-9]+;[0-9]+$/)) {
                 let ids = text.split(";");
-                if (confirm("Are you sure? This action can't be undone.")) {
+                showConfirmDialog("This will remove the link. Are you sure?", () => {
                     links[ids[0]].content.splice(ids[1], 1);
                     animateRemovingLink(Number(ids[0]), Number(ids[1]));
-                }
+                });
             }
             event.target.style.backgroundColor = "";
             event.target.style.opacity = "";
@@ -716,6 +785,31 @@
             }
         }
 
+        function showConfirmDialog(message, positive_callback = () => { }, negative_callback = () => { }, positive_label = "Yes", negative_label = "No") {
+            confirm_text.innerHTML = message;
+            confirm_positive.innerHTML = positive_label;
+            confirm_negative.innerHTML = negative_label;
+            confirm_positive.onclick = () => {
+                positive_callback();
+                hideConfirmDialog();
+            };
+            confirm_negative.onclick = () => {
+                negative_callback();
+                hideConfirmDialog();
+            };
+            confirm_dialog.classList.add("confirm-opening");
+            new Promise(resolve => setTimeout(resolve, 1)).then(() => {
+                confirm_dialog.classList.add("confirm-opened");
+            });
+        }
+
+        function hideConfirmDialog() {
+            confirm_dialog.classList.remove("confirm-opened");
+            Promise.all(
+                confirm_dialog.getAnimations().map((animation) => animation.finished),
+            ).then(() => { confirm_dialog.classList.remove("confirm-opening") })
+        }
+
         function loadLinks() {
             let item = storage.getItem("links");
             if (item) {
@@ -729,12 +823,12 @@
         }
 
         function removeLinks() {
-            if (confirm("Are you sure? This action can't be undone.")) {
+            showConfirmDialog("This will restore default links. Are you sure?", () => {
                 storage.clear();
                 loadLinks();
                 window.location.hash = "#restored";
                 window.location.reload();
-            }
+            });
         }
 
         function exportLinks() {
@@ -837,27 +931,33 @@
         }
 
         function removeSlide() {
-            if (links[current_slide].content.length == 0 || confirm("Are you sure? This action can't be undone.")) {
-                if (links.length > 1) {
-                    let c_slide = current_slide;
-                    previousSlide();
-                    links.splice(c_slide, 1);
-                    generateLinks();
-                    if (c_slide == 0) {
-                        Promise.all(
-                            document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
-                        ).then(previousSlide);
-                    }
-                } else {
-                    addSlide()
-                    links.splice(0, 1);
-                    generateLinks();
+            if (links[current_slide].content.length == 0) {
+                confidentlyRemoveSlide();
+            } else {
+                showConfirmDialog("This will remove this slide. Are you sure?", confidentlyRemoveSlide);
+            }
+        }
+
+        function confidentlyRemoveSlide() {
+            if (links.length > 1) {
+                let c_slide = current_slide;
+                previousSlide();
+                links.splice(c_slide, 1);
+                generateLinks();
+                if (c_slide == 0) {
                     Promise.all(
                         document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
                     ).then(previousSlide);
                 }
-                updateSlideButtons();
+            } else {
+                addSlide()
+                links.splice(0, 1);
+                generateLinks();
+                Promise.all(
+                    document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
+                ).then(previousSlide);
             }
+            updateSlideButtons();
         }
 
         function addSlide() {
