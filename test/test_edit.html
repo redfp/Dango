@@ -10,6 +10,15 @@
             height: 100%;
         }
 
+        .modal-opening {
+            display: block;
+            opacity: 0;
+        }
+
+        .modal-opened {
+            opacity: 1;
+        }
+
         .modal-background {
             z-index: 1;
             position: fixed;
@@ -28,13 +37,17 @@
             position: relative;
         }
 
-        .links-edit {
+        .modal-content-opening {
+            transform: translateY(1rem);
+        }
+
+        .edit-links-content {
             margin: 25vh auto;
             width: 60vh;
             text-align: center;
         }
 
-        .link-edit {
+        .edit-link-content {
             margin: 32vh auto;
             width: 40vh;
         }
@@ -389,7 +402,7 @@
     <div id="edit-links" class="modal">
         <div class="modal-background" ondragover="allowModalDrop(event)" ondragenter="modalDragEnter(event)"
             ondragleave="modalDragLeave(event)" ondrop="modalDrop(event)"></div>
-        <div class="modal-content links-edit">
+        <div id="edit-links-content" class="modal-content edit-links-content">
             <div class="icon close" onclick="hideEditLinks()">✕</div>
             <div class="icon menu"></div>
             <div class="right-buttons-container">
@@ -429,7 +442,7 @@
     </div>
     <div id="edit-link" class="modal">
         <div class="modal-background"></div>
-        <div class="modal-content link-edit">
+        <div id="edit-link-content" class="modal-content edit-link-content">
             <div class="icon close" onclick="hideEditLink()">✕</div>
             <h1 id="edit-link-title">Edit Link #</h1>
             <br>
@@ -472,7 +485,9 @@
   }`
 
         const edit_links = document.getElementById("edit-links");
+        const edit_links_content = document.getElementById("edit-links-content");
         const edit_link = document.getElementById("edit-link");
+        const edit_link_content = document.getElementById("edit-link-content");
         const edit_link_title = document.getElementById("edit-link-title");
         const input_text = document.getElementById("input-text");
         const input_link = document.getElementById("input-link");
@@ -733,7 +748,7 @@
             input_text.value = current_link.value;
             input_link.value = current_link.link;
 
-            edit_link.style.display = "block";
+            showModal(edit_link, edit_link_content);
             updatePreview();
         }
 
@@ -871,20 +886,40 @@
         }
 
         function hideEditLink() {
-            edit_link.style.display = "none";
+            hideModal(edit_link, edit_link_content);
             current_link.value = input_text.value;
             current_link.link = input_link.value;
             generateLinks();
         }
 
         function showEditLinks() {
-            edit_links.style.display = "block";
+            showModal(edit_links, edit_links_content);
             loadLinks();
             updateSlideButtons();
         }
 
         function hideEditLinks() {
-            edit_links.style.display = "none";
+            hideModal(edit_links, edit_links_content);
+        }
+
+        function showModal(modal, modal_content) {
+            modal.classList.add("modal-opening");
+            modal_content.classList.add("modal-content-opening");
+            new Promise(resolve => setTimeout(resolve, 1)).then(() => {
+                modal.classList.add("modal-opened");
+                modal_content.classList.remove("modal-content-opening");
+            });
+        }
+
+        function hideModal(modal, modal_content) {
+            modal.classList.remove("modal-opened");
+            modal_content.classList.add("modal-content-opening");
+            Promise.all(
+                modal.getAnimations().map((animation) => animation.finished),
+            ).then(() => {
+                modal.classList.remove("modal-opening");
+                modal_content.classList.remove("modal-content-opening");
+            });
         }
 
         function createNewLink(slide_i) {
