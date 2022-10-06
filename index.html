@@ -1,43 +1,112 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Dango</title>
     <link rel=" shortcut icon" type="image/png" href="favicon.png" />
 
     <link rel="stylesheet" href="css/style.css" />
+</head>
 
-    <script src="https://unpkg.com/feather-icons"></script>
-  </head>
-
-  <body>
+<body>
     <main>
-      <div class="time"></div>
-      <div class="date"></div>
-      <div class="search">
-        <form id="search">
-          <input
-            type="search"
-            class="search_bar"
-            placeholder="Search..."
-            autofocus
-          />
-        </form>
-      </div>
-      <a class="prev" onclick="previousSlide()"
-        ><i class="card_icon" data-feather="chevron-up"></i
-      ></a>
-      <div class="links">
-        <div class="slides"></div>
-      </div>
-      <a class="next" onclick="nextSlide()"
-        ><i class="card_icon" data-feather="chevron-down"></i
-      ></a>
-      <div class="title"></div>
+        <div class="time"></div>
+        <div class="date"></div>
+        <div class="search">
+            <form id="search">
+                <input type="search" class="search_bar" placeholder="Search..." autofocus />
+            </form>
+        </div>
+        <a class="prev" onclick="previousSlide()">
+            <div class="icon"></div>
+        </a>
+        <div class="links">
+            <div id="slides" class="slides"></div>
+        </div>
+        <a class="next" onclick="nextSlide()">
+            <div class="icon"></div>
+        </a>
+        <div id="slide-title" class="title"></div>
     </main>
-    <script src="js/links.js"></script>
+    <div id="edit-links" class="modal">
+        <div id="edit-links-background" class="modal-background" ondragover="allowModalDrop(event)"
+            ondragenter="modalDragEnter(event)" ondragleave="modalDragLeave(event)" ondrop="modalDrop(event)"
+            onclick="clickedModalBackground(event)"></div>
+        <div id="edit-links-content" class="modal-content edit-links-content">
+            <div class="icon close" onclick="hideEditLinks()">✕</div>
+            <div class="icon menu"></div>
+            <div class="right-buttons-container">
+                <div class="icon right-buttons button-save" onclick="saveLinks()"></div>
+                <div class="icon right-buttons button-export" onclick="exportLinks()"></div>
+                <div class="icon right-buttons button-import" onclick="importLinks()"></div>
+                <div class="icon right-buttons button-restore-default" onclick="removeLinks()"></div>
+                <span class="tooltip tooltip-save">Save</span>
+                <span class="tooltip tooltip-export">Export Links</span>
+                <span class="tooltip tooltip-import">Import Links</span>
+                <span class="tooltip tooltip-restore-default">Restore Default Links</span>
+            </div>
+
+            <div>
+                <h1>Edit Links</h1>
+                <div class="slides-border">
+                    <a class="prev" onclick="previousSlide()" ondragenter="slideControlDragEnter(event)">
+                        <div class="icon"></div>
+                    </a>
+                    <div class="links">
+                        <div id="editable-slides" class="slides"></div>
+                    </div>
+                    <a class="next" onclick="nextSlide()" ondragenter="slideControlDragEnter(event)">
+                        <div class="icon"></div>
+                    </a>
+                </div>
+                <div>
+                    <div class="icon slide-button remove-slide" onclick="removeSlide()"></div>
+                    <input type="text" id="input-title" name="input-title" class="input-title"
+                        onfocusout="updateSlideTitle()">
+                    <div class="icon slide-button add-slide" onclick="addSlide()">樂</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="edit-link" class="modal">
+        <div id="edit-link-background" class="modal-background" onclick="clickedModalBackground(event)"></div>
+        <div id="edit-link-content" class="modal-content edit-link-content">
+            <div class="icon close" onclick="hideEditLink()">✕</div>
+            <h1 id="edit-link-title">Edit Link #</h1>
+            <br>
+            <div>
+                <div>
+                    <input type="text" id="input-text" name="input-text" oninput="updatePreview();"
+                        ondrop="editLinkDrop(event)">
+                    <sub><a target="_blank" id="input-hint" class="input-hint input-hint-enabled"
+                            href="https://www.nerdfonts.com/cheat-sheet">
+                            (Take icons from here)
+                        </a></sub><br>
+                    <label for="input-link">Link:</label>
+                    <input type="url" id="input-link" name="input-link" oninput="updatePreview();"
+                        ondrop="editLinkDrop(event)">
+                    <sub><a id="input-link-hint" class="input-hint" onclick="fixProtocol()">
+                            (Looks like you forgot the protocol)
+                        </a></sub><br>
+                </div>
+            </div>
+            <a target="_blank" id="preview-card" class="card" href="https://www.amishrakefight.org/gfy/">Example</a>
+        </div>
+    </div>
+
+    <div class="notification" id="notification" onclick="hideNotification()"></div>
+    <div id="confirm-dialog" class="confirm-dialog">
+        <h1 id="confirm-text">Are you sure?</h1>
+        <div class="confirm-choice">
+            <a href="#" id="confirm-negative">No</a>
+            <a href="#" id="confirm-positive">Yes</a>
+        </div>
+    </div>
     <script src="js/config.js"></script>
     <script src="js/script.js"></script>
-  </body>
+    <script src="js/slides.js"></script>
+</body>
+
 </html>
