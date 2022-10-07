@@ -21,6 +21,8 @@ const confirm_text = document.getElementById("confirm-text");
 const confirm_positive = document.getElementById("confirm-positive");
 const confirm_negative = document.getElementById("confirm-negative");
 const editable_slides = document.getElementById("editable-slides");
+const edit_links_prev = document.getElementById("edit-links-prev");
+const edit_links_next = document.getElementById("edit-links-next");
 
 var current_link = {};
 var current_editable_slide = 0;
@@ -322,16 +324,16 @@ function updateSlideTitle() {
 
 function updateSlideButtons() {
     if (links.length <= 1) {
-        document.getElementsByClassName("prev")[0].style.color = "var(--fg-faint)"
-        document.getElementsByClassName("next")[0].style.color = "var(--fg-faint)"
-        document.getElementsByClassName("prev")[0].style.cursor = "default"
-        document.getElementsByClassName("next")[0].style.cursor = "default"
+        edit_links_prev.style.color = "var(--fg-faint)"
+        edit_links_next.style.color = "var(--fg-faint)"
+        edit_links_prev.style.cursor = "default"
+        edit_links_next.style.cursor = "default"
     }
     else {
-        document.getElementsByClassName("prev")[0].style.color = "var(--fg)"
-        document.getElementsByClassName("next")[0].style.color = "var(--fg)"
-        document.getElementsByClassName("prev")[0].style.cursor = "pointer"
-        document.getElementsByClassName("next")[0].style.cursor = "pointer"
+        edit_links_prev.style.color = "var(--fg)"
+        edit_links_next.style.color = "var(--fg)"
+        edit_links_prev.style.cursor = "pointer"
+        edit_links_next.style.cursor = "pointer"
     }
 }
 
