@@ -1,7 +1,5 @@
 const getCssVariable = (v) => getComputedStyle(document.body).getPropertyValue("--" + v);
 const storage = window.localStorage;
-const maxSlideLength = getCssVariable("slide-rows") * getCssVariable("slide-cols");
-const editable_slides = document.getElementById("editable-slides");
 const slides = document.getElementById("slides");
 const slide_title = document.getElementById("slide-title");
 
