@@ -169,6 +169,36 @@ input:focus {
   font-weight: bold;
 }
 
+.edit-button {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: 5%;
+  border-radius: 1vh;
+  border-width: 0;
+  width: 5.5vh;
+  height: 5.5vh;
+  font-size: 3.5vh;
+  color: var(--sbg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg);
+}
+
+.edit-button:hover {
+  cursor: pointer;
+  background-color: var(--sbg-faint);
+  color: var(--fg-faint);
+}
+
+.edit-button:active {
+  transition-duration: 0s;
+  background-color: var(--sbg);
+  color: var(--fg);
+}
+
 .modal {
   display: none;
   position: fixed;
