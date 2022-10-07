@@ -347,6 +347,15 @@ input:focus {
   border-color: var(--accent);
 }
 
+.menu {
+  position: absolute;
+  color: var(--sbg);
+  width: 3vh;
+  height: 3vh;
+  margin-bottom: 2vh;
+  left: 3vh;
+}
+
 .right-buttons-container {
   position: absolute;
   display: flex;
@@ -383,76 +392,12 @@ input:focus {
   cursor: pointer;
 }
 
-.menu {
-  position: absolute;
-  color: var(--sbg);
-  width: 3vh;
-  height: 3vh;
-  margin-bottom: 2vh;
-  left: 3vh;
-}
-
 .button-restore-default {
   color: var(--warn-faint)
 }
 
 .button-restore-default:hover {
   color: var(--warn)
-}
-
-.tooltip {
-  z-index: 3;
-  overflow: hidden;
-  position: absolute;
-  padding: 1vh;
-  border: 3px solid var(--fg);
-  border-radius: 15px;
-  right: 6vh;
-  background-color: var(--bg);
-  visibility: hidden;
-  font-size: 1.8vh;
-  opacity: 0;
-  transition-delay: 0s;
-}
-
-.tooltip-save {
-  top: 0;
-}
-
-.tooltip-export {
-  top: 5vh;
-}
-
-.tooltip-import {
-  top: 10vh;
-}
-
-.tooltip-restore-default {
-  top: 15vh;
-}
-
-.button-save:hover~.tooltip-save {
-  transition-delay: 1s;
-  visibility: visible;
-  opacity: 1;
-}
-
-.button-import:hover~.tooltip-import {
-  transition-delay: 1s;
-  visibility: visible;
-  opacity: 1;
-}
-
-.button-export:hover~.tooltip-export {
-  transition-delay: 1s;
-  visibility: visible;
-  opacity: 1;
-}
-
-.button-restore-default:hover~.tooltip-restore-default {
-  transition-delay: 1s;
-  visibility: visible;
-  opacity: 1;
 }
 
 .notification {
