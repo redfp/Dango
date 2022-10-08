@@ -1,3 +1,11 @@
+const clock_time = document.getElementById("time");
+const clock_date = document.getElementById("date");
+const search_form = document.getElementById("search-form");
+const search_bar = document.getElementById("search-bar");
+
+search_form.addEventListener("submit", search);
+showTime();
+
 function showTime() {
     var months = [
         "Jan",
@@ -41,7 +49,7 @@ function showTime() {
         time += " " + session;
     }
 
-    document.getElementsByClassName("time").item(0).textContent = time;
+    clock_time.textContent = time;
 
     if (config.month_first) {
         var date = months[M] + " " + D.toString();
@@ -52,20 +60,18 @@ function showTime() {
         date += ", " + Y;
     }
 
-    document.getElementsByClassName("date").item(0).textContent = date;
+    clock_date.textContent = date;
 
     setTimeout(showTime, 1000);
 }
 
 function search(event) {
-    event.preventDefault();
-    const q = document.getElementsByClassName("search_bar")[0];
-    const url = encodeURI(config.search_engine.replace("%s", q.value));
-    window.open(url, config.open_links_in_new_tab ? "_blank" : "_self");
-    if (config.clear_searchbar) {
-        q.value = "";
+    if (search_bar.value) {
+        event.preventDefault();
+        const url = encodeURI(config.search_engine.replace("%s", search_bar.value));
+        window.open(url, config.open_links_in_new_tab ? "_blank" : "_self");
+        if (config.clear_searchbar) {
+            search_bar.value = "";
+        }
     }
 }
-
-document.getElementById("search").addEventListener("submit", search);
-showTime();

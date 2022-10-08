@@ -10,6 +10,22 @@ var config = {
     auto_save: true,
 };
 
+var keybinding = {
+    next_slide: ["ArrowDown", "s", "j"],
+    previous_slide: ["ArrowUp", "w", "k"],
+    close: ["Escape", "x"],
+    preview: ["Enter"],
+    add_slide: ["n", "a", "+"],
+    remove_slide: ["r", "-"],
+    import_links: ["i"],
+    export_links: ["e"],
+    reset_links: ["Delete", "d"],
+    open_edit_links: ["e"],
+    focus_on_search: ["Enter"],
+    confirm_positive: ["y"],
+    confirm_negative: ["n", "Enter", "Escape"]
+}
+
 const default_links = [
     {
         title: "General",

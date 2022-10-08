@@ -31,6 +31,7 @@ var currently_dragging_slide_i = -1;
 var currently_dragging_link_i = -1;
 
 editable_slides.addEventListener("wheel", changeEditableSlidesByWheel);
+document.addEventListener("keydown", keyPressed);
 onLoadCheck();
 showEditableSlides();
 
@@ -56,6 +57,72 @@ function changeEditableSlidesByWheel(event) {
         Promise.all(
             editable_slides.getAnimations().map((animation) => animation.finished),
         ).then(() => { can_scroll_modals = true; })
+    }
+}
+
+function keyPressed(event) {
+    if (event.target.nodeName == "BODY" && !event.repeat) {
+        if (confirm_dialog.classList.contains("confirm-opened")) {
+            if (keybinding.confirm_negative.includes(event.key)) {
+                confirm_negative.click();
+            } else if (keybinding.confirm_positive.includes(event.key)) {
+                confirm_positive.click();
+            }
+        } else if (edit_link.classList.contains("modal-opened")) {
+            if (keybinding.preview.includes(event.key)) {
+                preview_card.click();
+            } else if (keybinding.close.includes(event.key)) {
+                hideEditLink();
+            }
+        } else if (edit_links.classList.contains("modal-opened")) {
+            if (!isNaN(event.key)) {
+                let n = Number(event.key);
+                if (n == 0)
+                    n = 10;
+                n -= 1;
+                if (n < maxSlideLength) {
+                    getLinkOnSlide(current_editable_slide, n).click();
+                }
+            } else if (event.ctrlKey && event.key == 's') {
+                event.preventDefault();
+                saveLinks();
+            } else if (keybinding.next_slide.includes(event.key)) {
+                nextEditableSlide();
+            } else if (keybinding.previous_slide.includes(event.key)) {
+                previousEditableSlide();
+            } else if (keybinding.close.includes(event.key)) {
+                hideEditLinks();
+            } else if (keybinding.add_slide.includes(event.key)) {
+                addSlide();
+            } else if (keybinding.remove_slide.includes(event.key)) {
+                removeSlide();
+            } else if (keybinding.import_links.includes(event.key)) {
+                importLinks();
+            } else if (keybinding.export_links.includes(event.key)) {
+                exportLinks();
+            } else if (keybinding.reset_links.includes(event.key)) {
+                removeLinks();
+            }
+        } else {
+            if (!isNaN(event.key)) {
+                let n = Number(event.key);
+                if (n == 0)
+                    n = 10;
+                n -= 1;
+                if (n < maxSlideLength) {
+                    slides.children[current_slide].children[n].click();
+                }
+            } else if (keybinding.next_slide.includes(event.key)) {
+                nextSlide();
+            } else if (keybinding.previous_slide.includes(event.key)) {
+                previousSlide();
+            } else if (keybinding.open_edit_links.includes(event.key)) {
+                showEditLinks();
+            } else if (keybinding.focus_on_search.includes(event.key)) {
+                event.preventDefault();
+                search_bar.focus();
+            }
+        }
     }
 }
 
@@ -163,6 +230,7 @@ function clickedModalBackground(event) {
 // EDIT LINKS DIALOG
 
 function showEditLinks() {
+    goToEditableSlide(current_slide);
     showModal(edit_links, edit_links_content);
     loadEditableLinks();
     updateSlideButtons();
@@ -249,13 +317,12 @@ function createNewLink(slide_i) {
 }
 
 function showEditableSlides() {
-    var slides = document.getElementsByClassName("slide");
     var links_slides = editable_slides;
-    if (current_editable_slide > slides.length - 1) {
+    if (current_editable_slide > links.length - 1) {
         current_editable_slide = 0;
     }
     if (current_editable_slide < 0) {
-        current_editable_slide = slides.length - 1;
+        current_editable_slide = links.length - 1;
     }
     input_title.value = links[current_editable_slide].title;
     links_slides.style.transform = `translateY(

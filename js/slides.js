@@ -7,9 +7,9 @@ var current_slide = 0;
 var can_scroll = true;
 var links;
 
+slides.addEventListener("wheel", changeSlidesByWheel);
 loadLinks();
 showSlides();
-slides.addEventListener("wheel", changeSlidesByWheel);
 
 function changeSlidesByWheel(event) {
     event.preventDefault();
