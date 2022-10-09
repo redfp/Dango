@@ -7,6 +7,7 @@
 
 :root {
   --bg: #ffffff;
+  --bg-faint: #fefefe;
   --fg: #000000;
   --fg-faint: #aaa;
   --sbg: #dedede;
@@ -37,6 +38,7 @@
 body,
 html {
   background-color: var(--bg);
+  color: var(--fg);
   height: 100vh;
   display: grid;
   margin: 0;
@@ -228,9 +230,9 @@ input:focus {
 
 .modal-content {
   z-index: 2;
-  background-color: #fefefe;
+  background-color: var(--bg);
   padding: 3vh;
-  border: 1px solid #888;
+  border: 1px solid var(--sbg);
   border-radius: 15px;
   position: relative;
 }
@@ -261,7 +263,7 @@ input:focus {
 }
 
 .close:hover {
-  color: var(--fbg);
+  color: var(--fg);
   cursor: pointer;
 }
 
@@ -364,7 +366,7 @@ input:focus {
   height: 4vh;
   padding: 1vh;
   left: 1.7vh;
-  border: 3px solid var(--fg);
+  border: 3px solid var(--sbg);
   border-radius: 15px;
   background-color: var(--bg);
   align-items: flex-end;
