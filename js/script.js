@@ -1,3 +1,11 @@
+const clock_time = document.getElementById("time");
+const clock_date = document.getElementById("date");
+const search_form = document.getElementById("search-form");
+const search_bar = document.getElementById("search-bar");
+
+search_form.addEventListener("submit", search);
+showTime();
+
 function showTime() {
     var months = [
         "Jan",
@@ -41,7 +49,7 @@ function showTime() {
         time += " " + session;
     }
 
-    document.getElementsByClassName("time").item(0).textContent = time;
+    clock_time.textContent = time;
 
     if (config.month_first) {
         var date = months[M] + " " + D.toString();
@@ -52,98 +60,18 @@ function showTime() {
         date += ", " + Y;
     }
 
-    document.getElementsByClassName("date").item(0).textContent = date;
+    clock_date.textContent = date;
 
     setTimeout(showTime, 1000);
 }
 
 function search(event) {
-    const q = document.getElementsByClassName("search_bar")[0];
-    event.preventDefault();
-    const url = encodeURI(config.search_engine.replace("%s", q.value));
-    window.open(url, config.open_links_in_new_tab ? "_blank" : "_self");
-    if (config.clear_searchbar) {
-        q.value = "";
-    }
-}
-
-var currentSlide = 0;
-var can_scroll = true;
-
-function nextSlide() {
-    currentSlide += 1;
-    showSlides();
-}
-
-function previousSlide() {
-    currentSlide -= 1;
-    showSlides();
-}
-
-function showSlides() {
-    var slides = document.getElementsByClassName("slide");
-    var links_slides = document.getElementsByClassName("slides")[0];
-    if (currentSlide > slides.length - 1) {
-        currentSlide = 0;
-    }
-    if (currentSlide < 0) {
-        currentSlide = slides.length - 1;
-    }
-    document.getElementsByClassName("title")[0].innerHTML =
-        links[currentSlide].title;
-    links_slides.style.transform = `translateY(calc(-${currentSlide} * (var(--slide-cols) * var(--slide-col-height) + var(--slide-gap) * (var(--slide-cols) - 1) + var(--slide-padding) * 2)))`;
-}
-
-function changeSlidesByWheel(event) {
-    event.preventDefault();
-    if (can_scroll) {
-        if (event.deltaY > 0) {
-            nextSlide();
-        } else {
-            previousSlide();
+    if (search_bar.value) {
+        event.preventDefault();
+        const url = encodeURI(config.search_engine.replace("%s", search_bar.value));
+        window.open(url, config.open_links_in_new_tab ? "_blank" : "_self");
+        if (config.clear_searchbar) {
+            search_bar.value = "";
         }
-        can_scroll = false;
-        Promise.all(
-            document.getElementsByClassName("slides")[0].getAnimations().map((animation) => animation.finished),
-        ).then(() => { can_scroll = true; })
     }
 }
-
-function setStyleVariable(variable, value) {
-    document.querySelector(":root").style.setProperty(variable, value);
-}
-
-function generateLinks() {
-    links.forEach((slide) => {
-        let res_div = document.createElement("div");
-        res_div.classList.add("slide");
-        let res_html = "";
-        slide.content.forEach((link) => {
-            if (link.icon !== undefined) {
-                res_html += `
-        <a ${config.open_links_in_new_tab ? 'target="_blank" ' : ""}href="${link.link
-                    }" class="card">
-          <i class="card_icon" data-feather="${link.icon}"></i>
-        </a>`;
-            } else if (link.text !== undefined) {
-                res_html += `
-        <a ${config.open_links_in_new_tab ? 'target="_blank" ' : ""}href="${link.link
-                    }" class="card card_text">
-          ${link.text}
-        </a>`;
-            }
-        });
-        res_div.innerHTML = res_html;
-        document.getElementsByClassName("slides")[0].append(res_div);
-    });
-}
-
-document.getElementById("search").addEventListener("submit", search);
-document
-    .getElementsByClassName("slides")[0]
-    .addEventListener("wheel", changeSlidesByWheel);
-
-generateLinks();
-showTime();
-showSlides();
-feather.replace();
