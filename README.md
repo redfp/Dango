@@ -1,6 +1,9 @@
 # Dango
 Minimal configurable HTML startpage created for personal use, inspired by [Bento](https://github.com/migueravila/Bento).
 
+![image](https://user-images.githubusercontent.com/50246819/196786359-42caa874-7107-4bb6-9c62-011a39fa14e2.png)
+
+
 ### Goals
 
 - Lightweight but pretty
