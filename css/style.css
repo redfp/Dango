@@ -532,3 +532,18 @@ input:focus {
 #confirm-negative:hover {
   color: var(--warn);
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --bg-faint: #1f1f1f;
+    --fg: #a1a1a1;
+    --fg-faint: #707070;
+    --sbg: #121212;
+    --sbg-faint: #101010;
+    --warn: #DA1049;
+    --warn-faint: #744253;
+    --accent: #07393C;
+    --link: #306BAC;
+  }
+}
